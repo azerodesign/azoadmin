@@ -37,32 +37,32 @@ const Store = () => {
                 onSuccess={handleSuccess}
             />
 
-            <header className="flex justify-between items-end mb-6">
-                <div>
-                    <h2 className="text-3xl font-bold mb-2">Store Management</h2>
-                    <p className="text-gray-500">Manage products and view incoming orders.</p>
-                </div>
-                <div className="flex gap-4 items-center">
-                    <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200">
-                        <button
-                            onClick={() => setActiveTab('products')}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'products' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                        >
-                            Products
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('orders')}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'orders' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                        >
-                            Orders
-                        </button>
+            <header className="flex flex-col gap-4 mb-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+                    <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-2">Store Management</h2>
+                        <p className="text-gray-500 text-sm sm:text-base">Manage products and view incoming orders.</p>
                     </div>
                     <button
                         onClick={() => setIsProductModalOpen(true)}
-                        className="px-4 py-2 bg-primary text-white rounded-xl font-medium flex items-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+                        className="px-4 py-2 bg-primary text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 text-sm w-full sm:w-auto"
                     >
                         <Plus size={18} />
                         Add Product
+                    </button>
+                </div>
+                <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200 w-full sm:w-auto">
+                    <button
+                        onClick={() => setActiveTab('products')}
+                        className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'products' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                        Products
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('orders')}
+                        className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'orders' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                        Orders
                     </button>
                 </div>
             </header>
@@ -91,35 +91,37 @@ const Store = () => {
                 </div>
             ) : (
                 <Card className="overflow-hidden border-none shadow-sm">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-50 text-gray-500 uppercase text-xs font-semibold tracking-wider">
-                            <tr>
-                                <th className="p-4 text-left">ID</th>
-                                <th className="p-4 text-left">Customer</th>
-                                <th className="p-4 text-left">Details</th>
-                                <th className="p-4 text-left">Total</th>
-                                <th className="p-4 text-left">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {orders.map(order => (
-                                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="p-4 font-mono text-xs text-gray-400">#{order.id.slice(0, 8)}</td>
-                                    <td className="p-4 text-sm font-medium text-gray-900">{order.customer_jid?.split('@')[0]}</td>
-                                    <td className="p-4 text-sm text-gray-500 truncate max-w-xs">{order.notes}</td>
-                                    <td className="p-4 font-bold text-gray-900">{formatCurrency(order.total_amount)}</td>
-                                    <td className="p-4">
-                                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase
-                                            ${order.status === 'completed' ? 'bg-sky-100 text-sky-700' :
-                                                order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
-                                                    'bg-yellow-100 text-yellow-700'}`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left min-w-[600px]">
+                            <thead className="bg-gray-50 text-gray-500 uppercase text-xs font-semibold tracking-wider">
+                                <tr>
+                                    <th className="p-4 text-left">ID</th>
+                                    <th className="p-4 text-left">Customer</th>
+                                    <th className="p-4 text-left">Details</th>
+                                    <th className="p-4 text-left">Total</th>
+                                    <th className="p-4 text-left">Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {orders.map(order => (
+                                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="p-4 font-mono text-xs text-gray-400">#{order.id.slice(0, 8)}</td>
+                                        <td className="p-4 text-sm font-medium text-gray-900">{order.customer_jid?.split('@')[0]}</td>
+                                        <td className="p-4 text-sm text-gray-500 truncate max-w-xs">{order.notes}</td>
+                                        <td className="p-4 font-bold text-gray-900">{formatCurrency(order.total_amount)}</td>
+                                        <td className="p-4">
+                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase
+                                            ${order.status === 'completed' ? 'bg-sky-100 text-sky-700' :
+                                                    order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
+                                                        'bg-yellow-100 text-yellow-700'}`}>
+                                                {order.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </Card>
             )}
         </div>
