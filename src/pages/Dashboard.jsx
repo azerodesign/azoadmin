@@ -5,11 +5,10 @@ import StatCard from '../components/dashboard/StatCard';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import AddProductModal from '../components/store/AddProductModal';
-import { useBotStatus } from '../hooks/useBotStatus';
+import BotStatusCard from '../components/dashboard/BotStatusCard';
 
 const Dashboard = () => {
     const [stats, setStats] = useState({ users: 0, orders: 0, revenue: 0 });
-    const { isOnline, lastActive } = useBotStatus();
     const [chartData, setChartData] = useState([]);
     const [recentActions, setRecentActions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -143,14 +142,7 @@ const Dashboard = () => {
                     trend="+0%"
                     isPrimary={false}
                 />
-                <StatCard
-                    title="Bot Status"
-                    value={isOnline ? "Online" : "Offline"}
-                    trend={isOnline ? "Active" : "Inactive"}
-                    isPrimary={false}
-                    icon={isOnline ? "wifi" : "wifi-off"}
-                    className={isOnline ? "text-green-600 bg-green-50" : "text-gray-500 bg-gray-50"}
-                />
+                <BotStatusCard />
             </div>
 
             {/* Analytics & Layout */}

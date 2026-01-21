@@ -12,7 +12,7 @@ const Analytics = () => {
     const [categoryData, setCategoryData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const COLORS = ['#0EA5E9', '#38BDF8', '#7DD3FC', '#CBD5E1'];
+    const COLORS = ['#2D63FF', '#0EA5E9', '#38BDF8', '#7DD3FC'];
 
     useEffect(() => {
         fetchAnalytics();
@@ -88,89 +88,90 @@ const Analytics = () => {
     return (
         <div className="space-y-6 animate-in fade-in duration-500 pb-10">
             <header>
-                <h2 className="text-2xl sm:text-3xl font-bold mb-1">Analytics</h2>
-                <p className="text-gray-500 text-sm">Real-time data from your Supabase database.</p>
+                <h2 className="text-2xl sm:text-3xl font-black mb-1 text-foreground tracking-tight">Analytics</h2>
+                <p className="text-muted text-sm font-medium">Real-time data from your Supabase database.</p>
             </header>
 
             {/* Bot Health Stats */}
+            {/* Bot Health Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4 relative overflow-hidden">
-                    <div className={`absolute right-0 top-0 p-3 opacity-10 ${isOnline ? 'text-green-500' : 'text-gray-400'}`}>
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 relative overflow-hidden group hover:luxury-glow transition-all duration-300">
+                    <div className={`absolute right-0 top-0 p-3 opacity-10 transition-colors duration-500 ${isOnline ? 'text-emerald-500' : 'text-muted'}`}>
                         <Activity size={64} />
                     </div>
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isOnline ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border transition-colors duration-500 ${isOnline ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-white/5 text-muted border-white/10'}`}>
                         <Activity size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">System Status</p>
-                        <h4 className={`text-xl font-bold ${isOnline ? 'text-green-600' : 'text-gray-500'}`}>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">System Status</p>
+                        <h4 className={`text-xl font-black ${isOnline ? 'text-emerald-500' : 'text-muted'}`}>
                             {isOnline ? 'Operational' : 'Offline'}
                         </h4>
                     </div>
                 </Card>
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary border border-primary/20">
                         <MessageSquare size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Total Transactions</p>
-                        <h4 className="text-xl font-bold">{revenueData.reduce((a, b) => a + b.users, 0)}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Total Transactions</p>
+                        <h4 className="text-xl font-black text-foreground">{revenueData.reduce((a, b) => a + b.users, 0)}</h4>
                     </div>
                 </Card>
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center text-rose-600">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-rose-500/10 rounded-xl flex items-center justify-center text-rose-500 border border-rose-500/20">
                         <Server size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Last Active</p>
-                        <h4 className="text-xl font-bold">{lastActive ? new Date(lastActive).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Last Active</p>
+                        <h4 className="text-xl font-black text-foreground">{lastActive ? new Date(lastActive).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '-'}</h4>
                     </div>
                 </Card>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center text-sky-700">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-sky-500/10 rounded-xl flex items-center justify-center text-sky-500 border border-sky-500/20">
                         <TrendingUp size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Categories</p>
-                        <h4 className="text-xl font-bold">{categoryData.length}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Categories</p>
+                        <h4 className="text-xl font-black text-foreground">{categoryData.length}</h4>
                     </div>
                 </Card>
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-700">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary border border-primary/20">
                         <Users size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Total Users</p>
-                        <h4 className="text-xl font-bold">{stats.users}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Total Users</p>
+                        <h4 className="text-xl font-black text-foreground">{stats.users}</h4>
                     </div>
                 </Card>
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-700">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 border border-purple-500/20">
                         <ShoppingBag size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Total Orders</p>
-                        <h4 className="text-xl font-bold">{stats.orders}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Total Orders</p>
+                        <h4 className="text-xl font-black text-foreground">{stats.orders}</h4>
                     </div>
                 </Card>
-                <Card className="p-4 bg-white border-none shadow-sm flex items-center gap-4">
-                    <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-orange-700">
+                <Card className="p-4 glass-panel border border-white/5 flex items-center gap-4 group hover:luxury-glow transition-all duration-300">
+                    <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-500 border border-orange-500/20">
                         <DollarSign size={24} />
                     </div>
                     <div>
-                        <p className="text-gray-500 text-xs font-medium">Net Revenue</p>
-                        <h4 className="text-xl font-bold">{formatCurrency(stats.revenue)}</h4>
+                        <p className="text-muted text-[10px] font-black uppercase tracking-widest">Net Revenue</p>
+                        <h4 className="text-xl font-black text-foreground">{formatCurrency(stats.revenue)}</h4>
                     </div>
                 </Card>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2 border-none shadow-sm">
+                <Card className="lg:col-span-2 border border-white/5 shadow-none glass-panel">
                     <CardHeader>
-                        <CardTitle className="text-lg">Transaction Overview</CardTitle>
+                        <CardTitle className="text-lg font-black text-foreground">Transaction Overview</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="h-[300px]">
@@ -178,26 +179,27 @@ const Analytics = () => {
                                 <AreaChart data={revenueData}>
                                     <defs>
                                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#0EA5E9" stopOpacity={0.1} />
-                                            <stop offset="95%" stopColor="#0EA5E9" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#2D63FF" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="#2D63FF" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                                    <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                                    <YAxis axisLine={false} tickLine={false} />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#7A7A7A', fontSize: 12 }} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7A7A7A', fontSize: 12 }} />
                                     <Tooltip
-                                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                        contentStyle={{ backgroundColor: '#111113', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#F9FAFB' }}
+                                        itemStyle={{ color: '#F9FAFB' }}
                                     />
-                                    <Area type="monotone" dataKey="revenue" stroke="#0EA5E9" fillOpacity={1} fill="url(#colorRev)" strokeWidth={3} />
+                                    <Area type="monotone" dataKey="revenue" stroke="#2D63FF" fillOpacity={1} fill="url(#colorRev)" strokeWidth={3} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-sm">
+                <Card className="border border-white/5 shadow-none glass-panel">
                     <CardHeader>
-                        <CardTitle className="text-lg">By Category</CardTitle>
+                        <CardTitle className="text-lg font-black text-foreground">By Category</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center">
                         <div className="h-[250px] w-full">
@@ -211,25 +213,27 @@ const Analytics = () => {
                                         outerRadius={80}
                                         paddingAngle={5}
                                         dataKey="value"
+                                        stroke="none"
                                     >
                                         {categoryData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                        contentStyle={{ backgroundColor: '#111113', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#F9FAFB' }}
+                                        itemStyle={{ color: '#F9FAFB' }}
                                     />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
-                        <div className="space-y-2 mt-4 w-full px-4">
+                        <div className="space-y-3 mt-4 w-full px-4">
                             {categoryData.map((item, i) => (
                                 <div key={i} className="flex items-center justify-between text-sm">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
-                                        <span className="text-gray-600">{item.name}</span>
+                                        <div className="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
+                                        <span className="text-muted font-bold">{item.name}</span>
                                     </div>
-                                    <span className="font-bold">{item.value}</span>
+                                    <span className="font-black text-foreground">{item.value}</span>
                                 </div>
                             ))}
                         </div>
@@ -237,21 +241,22 @@ const Analytics = () => {
                 </Card>
             </div>
 
-            <Card className="border-none shadow-sm">
+            <Card className="border border-white/5 shadow-none glass-panel">
                 <CardHeader>
-                    <CardTitle className="text-lg">Activity Trend</CardTitle>
+                    <CardTitle className="text-lg font-black text-foreground">Activity Trend</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={revenueData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                                <YAxis axisLine={false} tickLine={false} />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#7A7A7A', fontSize: 12 }} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#7A7A7A', fontSize: 12 }} />
                                 <Tooltip
-                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                    contentStyle={{ backgroundColor: '#111113', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#F9FAFB' }}
+                                    itemStyle={{ color: '#F9FAFB' }}
                                 />
-                                <Line type="monotone" dataKey="users" stroke="#0EA5E9" strokeWidth={3} dot={{ r: 6 }} activeDot={{ r: 8 }} />
+                                <Line type="monotone" dataKey="users" stroke="#0EA5E9" strokeWidth={3} dot={{ r: 4, fill: '#0EA5E9', strokeWidth: 0 }} activeDot={{ r: 8, strokeWidth: 0, fill: '#fff' }} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>

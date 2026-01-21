@@ -1,175 +1,143 @@
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
-import { Save, Bot, Smartphone, Moon, Sun, Bell, Shield } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { useState } from 'react';
+import { Card } from '../components/ui/card';
+import { Shield, Bell, Lock, Globe, Smartphone, Key, Save } from 'lucide-react';
 
 const Settings = () => {
     const [loading, setLoading] = useState(false);
-    const [settings, setSettings] = useState({
-        bot_name: 'Azo Bot',
-        owner_number: '6281234567890',
-        auto_reply: true,
-        bg_remove_api: '',
-        openai_api: ''
-    });
-
-    useEffect(() => {
-        fetchSettings();
-    }, []);
-
-    const fetchSettings = async () => {
-        if (!supabase) return;
-        try {
-            const { data, error } = await supabase
-                .from('admin_settings')
-                .select('*');
-
-            if (data && data.length > 0) {
-                // Convert array of {key, value} to object
-                const newSettings = { ...settings };
-                data.forEach(item => {
-                    newSettings[item.key] = item.value;
-                });
-                setSettings(newSettings);
-            }
-        } catch (error) {
-            console.error('Error fetching settings:', error);
-        }
-    };
-
-    const handleSave = async () => {
-        setLoading(true);
-        if (!supabase) {
-            alert("Supabase not configured");
-            setLoading(false);
-            return;
-        }
-
-        try {
-            // Upsert each setting
-            const updates = Object.keys(settings).map(key => ({
-                key,
-                value: settings[key]
-            }));
-
-            const { error } = await supabase
-                .from('admin_settings')
-                .upsert(updates);
-
-            if (error) throw error;
-            alert('Settings saved successfully!');
-        } catch (error) {
-            console.error('Error saving settings:', error);
-            alert('Failed to save settings.');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500 pb-10">
-            <header className="flex justify-between items-center">
-                <div>
-                    <h2 className="text-3xl font-bold mb-1">Settings</h2>
-                    <p className="text-gray-500 text-sm">Manage bot configuration and preferences.</p>
-                </div>
-                <button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="px-6 py-2 bg-primary text-white rounded-xl font-medium flex items-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50"
-                >
-                    <Save size={18} />
-                    {loading ? 'Saving...' : 'Save Changes'}
-                </button>
+        <div className="space-y-6 animate-in fade-in duration-500">
+            <header>
+                <h2 className="text-2xl sm:text-3xl font-black mb-1 text-foreground tracking-tight">Settings</h2>
+                <p className="text-muted text-sm font-medium">Manage your account preferences and system configurations.</p>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* General Settings */}
-                <Card className="border-none shadow-sm h-fit">
-                    <CardHeader className="border-b border-gray-50 pb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-                                <Bot size={20} />
+                <Card className="border border-white/5 shadow-none glass-panel p-6 lg:col-span-2">
+                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                        <Globe size={18} className="text-primary" />
+                        General Information
+                    </h3>
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-muted uppercase tracking-wider">Application Name</label>
+                                <input
+                                    type="text"
+                                    defaultValue="AzoAI Panel"
+                                    className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-medium"
+                                />
                             </div>
-                            <CardTitle className="text-lg">Bot Configuration</CardTitle>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4 pt-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">Bot Name</label>
-                            <input
-                                type="text"
-                                className="w-full bg-gray-50 border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
-                                value={settings.bot_name}
-                                onChange={(e) => setSettings({ ...settings, bot_name: e.target.value })}
-                            />
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-muted uppercase tracking-wider">Language</label>
+                                <select className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-medium appearance-none">
+                                    <option>English (US)</option>
+                                    <option>Indonesian</option>
+                                    <option>Spanish</option>
+                                </select>
+                            </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">Owner Number</label>
+                            <label className="text-xs font-bold text-muted uppercase tracking-wider">Support Email</label>
                             <input
-                                type="text"
-                                className="w-full bg-gray-50 border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
-                                value={settings.owner_number}
-                                onChange={(e) => setSettings({ ...settings, owner_number: e.target.value })}
+                                type="email"
+                                defaultValue="support@azoai.com"
+                                className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-medium"
                             />
                         </div>
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                            <div>
-                                <h4 className="font-bold text-gray-900 text-sm">Auto-Reply</h4>
-                                <p className="text-xs text-gray-500">Automatically reply to unknown commands</p>
+                    </div>
+                </Card>
+
+                {/* Notifications */}
+                <Card className="border border-white/5 shadow-none glass-panel p-6">
+                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                        <Bell size={18} className="text-primary" />
+                        Notifications
+                    </h3>
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+                            <div className="space-y-0.5">
+                                <p className="text-sm font-bold text-foreground">Email Alerts</p>
+                                <p className="text-xs text-muted">Receive updates via email</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="sr-only peer"
-                                    checked={settings.auto_reply}
-                                    onChange={(e) => setSettings({ ...settings, auto_reply: e.target.checked })}
-                                />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                <input type="checkbox" defaultChecked className="sr-only peer" />
+                                <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
                             </label>
                         </div>
-                    </CardContent>
+                        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+                            <div className="space-y-0.5">
+                                <p className="text-sm font-bold text-foreground">Push Notifications</p>
+                                <p className="text-xs text-muted">Browser alerts</p>
+                            </div>
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" className="sr-only peer" />
+                                <div className="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Security */}
+                <Card className="border border-white/5 shadow-none glass-panel p-6 lg:col-span-2">
+                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                        <Shield size={18} className="text-primary" />
+                        Security & Login
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-muted uppercase tracking-wider">Current Password</label>
+                                <input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all font-medium"
+                                />
+                            </div>
+                            <button className="px-4 py-2 bg-white/5 text-foreground text-xs font-bold uppercase tracking-wider rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+                                Change Password
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex items-start gap-3 p-4 bg-primary/10 rounded-xl border border-primary/20">
+                                <Smartphone className="text-primary mt-1" size={20} />
+                                <div>
+                                    <h4 className="text-sm font-bold text-foreground">Two-Factor Auth</h4>
+                                    <p className="text-xs text-muted mt-1 leading-relaxed">Secure your account with 2FA using Google Authenticator.</p>
+                                    <button className="mt-3 text-primary text-xs font-black uppercase tracking-wider hover:underline">Enable 2FA</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </Card>
 
                 {/* API Keys */}
-                <Card className="border-none shadow-sm h-fit">
-                    <CardHeader className="border-b border-gray-50 pb-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                                <Shield size={20} />
-                            </div>
-                            <CardTitle className="text-lg">API Integrations</CardTitle>
+                <Card className="border border-white/5 shadow-none glass-panel p-6">
+                    <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                        <Key size={18} className="text-primary" />
+                        API Access
+                    </h3>
+                    <div className="space-y-4">
+                        <div className="p-3 bg-black/40 rounded-xl border border-white/5">
+                            <p className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1">Public Key</p>
+                            <code className="text-xs font-mono text-primary block truncate">pk_live_51Msz...2s9K</code>
                         </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4 pt-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700 flex justify-between">
-                                OpenAI API Key
-                                <span className="text-xs text-gray-400 font-normal">Optional</span>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="sk-..."
-                                className="w-full bg-gray-50 border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-mono"
-                                value={settings.openai_api}
-                                onChange={(e) => setSettings({ ...settings, openai_api: e.target.value })}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700 flex justify-between">
-                                Remove.bg API Key
-                                <span className="text-xs text-gray-400 font-normal">Optional</span>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="ExampleKey123"
-                                className="w-full bg-gray-50 border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-mono"
-                                value={settings.bg_remove_api}
-                                onChange={(e) => setSettings({ ...settings, bg_remove_api: e.target.value })}
-                            />
-                        </div>
-                    </CardContent>
+                        <button className="w-full py-2.5 bg-white/5 text-red-400 text-xs font-bold uppercase tracking-wider rounded-xl border border-white/10 hover:bg-red-500/10 hover:border-red-500/20 transition-all">
+                            Regenerate Keys
+                        </button>
+                    </div>
                 </Card>
+            </div>
+
+            <div className="flex justify-end pt-4 border-t border-white/5">
+                <button
+                    disabled={loading}
+                    className="px-8 py-3 bg-primary text-primary-foreground rounded-xl font-bold flex items-center gap-2 hover:bg-primary-hover hover:scale-105 transition-all luxury-glow shadow-lg uppercase tracking-wider text-sm"
+                >
+                    <Save size={18} />
+                    Save Changes
+                </button>
             </div>
         </div>
     );

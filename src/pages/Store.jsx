@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { formatCurrency } from '../lib/utils';
-import { Plus, Package, ShoppingCart } from 'lucide-react';
+import { Plus, Package, ShoppingCart, Trash2 } from 'lucide-react';
 import { Card } from '../components/ui/card';
 import AddProductModal from '../components/store/AddProductModal';
 
@@ -29,6 +29,23 @@ const Store = () => {
         fetchStoreData();
     };
 
+    const deleteProduct = async (id, name) => {
+        if (!confirm(`Are you sure you want to delete product "${name}"?`)) return;
+
+        try {
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            fetchStoreData();
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert('Failed to delete product: ' + error.message);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
             <AddProductModal
@@ -40,27 +57,27 @@ const Store = () => {
             <header className="flex flex-col gap-4 mb-6">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
                     <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold mb-2">Store Management</h2>
-                        <p className="text-gray-500 text-sm sm:text-base">Manage products and view incoming orders.</p>
+                        <h2 className="text-2xl sm:text-3xl font-black mb-2 text-foreground tracking-tight">Store Management</h2>
+                        <p className="text-muted text-sm sm:text-base font-medium">Manage products and view incoming orders.</p>
                     </div>
                     <button
                         onClick={() => setIsProductModalOpen(true)}
-                        className="px-4 py-2 bg-primary text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 text-sm w-full sm:w-auto"
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-hover hover:scale-105 transition-all luxury-glow shadow-lg text-sm uppercase tracking-wider w-full sm:w-auto"
                     >
                         <Plus size={18} />
                         Add Product
                     </button>
                 </div>
-                <div className="flex bg-gray-100 p-1 rounded-xl border border-gray-200 w-full sm:w-auto">
+                <div className="flex bg-black/20 p-1 rounded-xl border border-white/5 w-full sm:w-auto backdrop-blur-md">
                     <button
                         onClick={() => setActiveTab('products')}
-                        className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'products' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                        className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${activeTab === 'products' ? 'bg-primary text-primary-foreground shadow-lg luxury-glow' : 'text-muted hover:text-foreground hover:bg-white/5'}`}
                     >
                         Products
                     </button>
                     <button
                         onClick={() => setActiveTab('orders')}
-                        className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'orders' ? 'bg-white text-primary shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                        className={`flex-1 sm:flex-none px-6 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${activeTab === 'orders' ? 'bg-primary text-primary-foreground shadow-lg luxury-glow' : 'text-muted hover:text-foreground hover:bg-white/5'}`}
                     >
                         Orders
                     </button>
@@ -70,30 +87,41 @@ const Store = () => {
             {activeTab === 'products' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {products.map(product => (
-                        <Card key={product.id} className="p-5 group hover:shadow-md transition-shadow border-none shadow-sm">
+                        <Card key={product.id} className="p-5 group hover:luxury-glow transition-all duration-300 border border-white/5 glass-panel bg-transparent">
                             <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 bg-gray-50 rounded-xl group-hover:bg-primary/10 transition-colors">
-                                    <Package className="text-gray-400 group-hover:text-primary" size={20} />
+                                <div className="p-3 bg-white/5 rounded-xl group-hover:bg-primary/20 transition-colors border border-white/10 group-hover:border-primary/30">
+                                    <Package className="text-muted group-hover:text-primary transition-colors" size={20} />
                                 </div>
-                                <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide ${product.stock > 0 ? 'bg-sky-100 text-sky-700' : 'bg-red-100 text-red-700'}`}>
+                                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border ${product.stock > 0 ? 'bg-sky-500/10 text-sky-400 border-sky-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'}`}>
                                     {product.stock > 0 ? `${product.stock} in stock` : 'Out of Stock'}
                                 </span>
                             </div>
-                            <h3 className="font-bold text-lg mb-1 text-gray-900">{product.keyword}</h3>
-                            <p className="text-gray-500 text-sm mb-4 line-clamp-2">{product.description}</p>
-                            <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                                <span className="text-primary font-bold text-lg">{formatCurrency(product.price)}</span>
-                                <button className="text-xs font-semibold text-gray-500 hover:text-primary transition-colors">Edit</button>
+                            <h3 className="font-black text-lg mb-1 text-foreground tracking-tight group-hover:text-primary transition-colors">{product.keyword}</h3>
+                            <p className="text-muted text-sm mb-4 line-clamp-2 font-medium">{product.description}</p>
+                            <div className="flex justify-between items-center pt-4 border-t border-white/5">
+                                <span className="text-primary font-black text-lg tracking-tight shadow-primary/20 drop-shadow-sm">{formatCurrency(product.price)}</span>
+                                <div className="flex items-center gap-3">
+                                    <button
+                                        onClick={() => deleteProduct(product.id, product.keyword)}
+                                        className="p-1.5 text-muted hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                        title="Delete Product"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                    <button className="text-xs font-bold text-muted hover:text-foreground uppercase tracking-widest transition-colors flex items-center gap-1">
+                                        Edit <span className="group-hover:translate-x-1 transition-transform">→</span>
+                                    </button>
+                                </div>
                             </div>
                         </Card>
                     ))}
-                    {products.length === 0 && <div className="col-span-3 text-center text-gray-500 py-10">No products found.</div>}
+                    {products.length === 0 && <div className="col-span-3 text-center text-muted py-10 font-bold">No products found.</div>}
                 </div>
             ) : (
-                <Card className="overflow-hidden border-none shadow-sm">
+                <Card className="overflow-hidden border border-white/5 shadow-none glass-panel">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left min-w-[600px]">
-                            <thead className="bg-gray-50 text-gray-500 uppercase text-xs font-semibold tracking-wider">
+                            <thead className="bg-black/20 text-muted uppercase text-[10px] font-black tracking-[0.2em] border-b border-white/5">
                                 <tr>
                                     <th className="p-4 text-left">ID</th>
                                     <th className="p-4 text-left">Customer</th>
@@ -102,18 +130,18 @@ const Store = () => {
                                     <th className="p-4 text-left">Status</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody className="divide-y divide-white/5">
                                 {orders.map(order => (
-                                    <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="p-4 font-mono text-xs text-gray-400">#{order.id.slice(0, 8)}</td>
-                                        <td className="p-4 text-sm font-medium text-gray-900">{order.customer_jid?.split('@')[0]}</td>
-                                        <td className="p-4 text-sm text-gray-500 truncate max-w-xs">{order.notes}</td>
-                                        <td className="p-4 font-bold text-gray-900">{formatCurrency(order.total_amount)}</td>
+                                    <tr key={order.id} className="hover:bg-white/5 transition-colors group">
+                                        <td className="p-4 font-mono text-xs text-muted group-hover:text-primary transition-colors">#{order.id.slice(0, 8)}</td>
+                                        <td className="p-4 text-sm font-bold text-foreground">{order.customer_jid?.split('@')[0]}</td>
+                                        <td className="p-4 text-sm text-muted truncate max-w-xs font-medium">{order.notes}</td>
+                                        <td className="p-4 font-black text-foreground">{formatCurrency(order.total_amount)}</td>
                                         <td className="p-4">
-                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase
-                                            ${order.status === 'completed' ? 'bg-sky-100 text-sky-700' :
-                                                    order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-yellow-100 text-yellow-700'}`}>
+                                            <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border
+                                            ${order.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                                    order.status === 'processing' ? 'bg-primary/10 text-primary border-primary/20' :
+                                                        'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
                                                 {order.status}
                                             </span>
                                         </td>
